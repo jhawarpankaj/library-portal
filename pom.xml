@@ -24,6 +24,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         
+        <!-- Rest End Point -->
+        <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+        
         <!-- JPA Data (We are going to use Repositories, Entities, Hibernate, etc...) -->
         
         <dependency>
@@ -56,6 +62,13 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
         
+        <!-- Used to remove restarts while updating -->
+        <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-devtools</artifactId>
+		    <optional>true</optional>
+		</dependency>
+        
    </dependencies>
    
    <build>
@@ -63,6 +76,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+    				<addResources>true</addResources>
+				</configuration>
             </plugin>
         </plugins>
     </build>
