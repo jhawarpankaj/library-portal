@@ -1,7 +1,10 @@
 package edu.utd.ecs.db.controllers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -19,7 +22,7 @@ import edu.utd.ecs.db.DTO.SearchDTO;
 import edu.utd.ecs.db.model.Book;
 
 @RestController
-@RequestMapping("/api/book/")
+@RequestMapping("/api/book")
 @EnableJpaRepositories("edu.utd.ecs.db.DAO")
 public class SearchBooksController {
 	
@@ -28,12 +31,21 @@ public class SearchBooksController {
 
 	@RequestMapping("/search/{values}")
 	@ResponseBody
-    public List<SearchDTO> bookSearch(@PathVariable("values") String values) {
+    public List<ArrayList<SearchDTO>> bookSearch(@PathVariable("values") String values) {
 		String cleanString = values.trim();
-//		for(String word : cleanString.split(" ")) {
-//			
-//		}
-        List<SearchDTO> renderSearchResultsAsDTO = searchRepository.renderSearchResultsAsDTO(cleanString);
-		return renderSearchResultsAsDTO;
+		Set<String> set = new HashSet<String>();
+		List<ArrayList<SearchDTO>> totalResults = new ArrayList<ArrayList<SearchDTO>>();
+		for(String word: cleanString.split(" ")) {
+			String temp = word.trim();
+			if(!set.contains(temp.toLowerCase())) {
+				set.add(temp.toLowerCase());
+			}			
+		}		
+		for(String word : set) {
+			List<SearchDTO> temp = searchRepository.renderSearchResultsAsDTO(word);
+			System.out.println(temp);
+			totalResults.add((ArrayList<SearchDTO>) temp);
+		}
+		return totalResults;
     }
 }

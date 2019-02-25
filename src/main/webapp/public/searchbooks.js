@@ -49,8 +49,9 @@ var App = React.createClass({
 var BooksTable = React.createClass({
 
 	render: function() {
+		var merged = [].concat.apply([], this.props.books);
 	    var rows = [];
-	    this.props.books.forEach(function(book) {
+	    merged.forEach(function(book) {
 	      rows.push(
 	        <Book book={book}/>);
 	    });
@@ -61,6 +62,8 @@ var BooksTable = React.createClass({
               <tr>
                   <th>ISBN</th>
                   <th>BOOK TITLE</th>
+                  <th>AUTHOR NAME</th>
+                  <th>ISAVAILABLE</th>
               </tr>
           </thead>
           <tbody>{rows}</tbody>
@@ -72,8 +75,20 @@ var BooksTable = React.createClass({
 var Book = React.createClass({
 
 	getInitialState: function() {
-	    return {display: true };
+	    return {
+	    	display: true,
+	    	showPopup:false,
+	    	cardId: "",
+	    	isEligible: {},
+	    	isbn: ""
+	    	};
 	  },
+	  
+	  togglePopup() {
+		    this.setState({
+		      showPopup: !this.state.showPopup
+		    });
+		  },
 
 	handleDelete() {
 	    var self = this;
@@ -88,6 +103,25 @@ var Book = React.createClass({
 	        }
 	    });
 	  },
+	  
+	  handleClick: function(e) {
+		  var self = this;
+			const uri = "http://localhost:8080/api/checkout/" + this.state.cardId.trim() + " " + this.state.isbn;
+			fetch(uri)
+			.then((resp) => resp.json())
+			.then(function(data) {
+				console.log("Return of the api call.");
+				console.log('data:', data);
+				console.log('type of data:', (typeof data));
+			    self.setState({books: data});
+			  });
+		    },
+		    
+	updateInputValue(e) {
+  	  this.setState({cardId: e.target.value});
+  	  this.setState({isbn: this.props.book.isbn});
+  	  console.log(this.state.isbn)
+  	},
 
 	render: function() {
 	    if (this.state.display==false) 
@@ -97,10 +131,33 @@ var Book = React.createClass({
 		      	<tr>
 		      		<td>{this.props.book.isbn}</td>
 	          		<td>{this.props.book.title}</td>
-	          		<td><button className="btn btn-info" onClick={this.handleDelete}>Delete</button></td>
+	          		<td>{this.props.book.author_name}</td>
+	          		<td>{this.props.book.isavailable}</td>
+	          		{this.props.book.isavailable === 'YES'?
+	          				<td>
+				          		<div>
+				          			<input type="text" onChange={this.updateInputValue} placeholder="Enter Card No..."/>
+				          			<input type="button" value="Check" onClick={this.handleClick}/>
+			                	</div>
+			               </td>
+	          					: 'NA'
+	          		}
 		      	</tr>
     		);
   	}
 });
+
+var Popup = React.createClass({
+	  render() {
+	    return (
+	      <div className='popup'>
+	        <div className='popup_inner'>
+	          <h1>{this.props.text}</h1>
+	        <button onClick={this.props.closePopup}>close me</button>
+	        </div>
+	      </div>
+	    );
+	  }
+	});
 
 ReactDOM.render(<App/>, document.getElementById('search'));
