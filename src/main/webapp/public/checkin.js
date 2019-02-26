@@ -2,7 +2,7 @@ var App = React.createClass({
 
   	loadBooksFromServer: function() {
 		var self = this;
-		const uri = "http://localhost:8080/api/book/search/" + this.state.value;
+		const uri = "http://localhost:8080/api/book/checkin/search/" + this.state.value;
 		fetch(uri)
 		.then((resp) => resp.json())
 		.then(function(data) {
@@ -39,7 +39,7 @@ var App = React.createClass({
 	  else{
 		  return(
 				 <div>	 
-		    		<input type="text" value={this.state.value} onChange={this.updateInputValue} placeholder="Something that needs to be done..."/>
+		    		<input type="text" value={this.state.value} onChange={this.updateInputValue} placeholder="Enter something..."/>
 		            <button className="button is-info" onClick={this.handleChange.bind(this)}>Search</button>
 	             </div>
 		  );
@@ -60,11 +60,11 @@ var BooksTable = React.createClass({
       <table className="table table-striped">
           <thead>
               <tr>
+                  <th>CARDNO</th>
                   <th>ISBN</th>
-                  <th>BOOK TITLE</th>
-                  <th>AUTHOR NAME</th>
-                  <th>ISAVAILABLE</th>
-                  <th>CHECKOUT</th>
+                  <th>SSN</th>
+                  <th>BORROWER NAME</th>
+                  <th>CHECK IN</th>
               </tr>
           </thead>
           <tbody>{rows}</tbody>
@@ -109,8 +109,8 @@ var Book = React.createClass({
 	  
 	  handleClick: function(e) {
 		  var self = this;
-		  var message = ""
-			const uri = "http://localhost:8080/api/checkout/" + this.state.cardId.trim() + " " + this.state.isbn;
+		  var message = "";
+			const uri = "http://localhost:8080/api/book/checkin/check/" + this.props.book.cardno.trim() + " " + this.props.book.isbn.trim();
 			fetch(uri)
 			.then((resp) => resp.json())
 			.then(function(data) {
@@ -126,7 +126,7 @@ var Book = React.createClass({
 		    },
 		    
 	updateInputValue(e) {
-  	  this.setState({cardId: e.target.value});
+  	  this.setState({cardId: this.props.book.cardno});
   	  this.setState({isbn: this.props.book.isbn});
   	  console.log(this.state.isbn)
   	},
@@ -141,39 +141,19 @@ var Book = React.createClass({
 	render: function() {
 	    if (this.state.display==false) 
 	    	return null;
+	    if (this.props.book.date_in != null)
+	    	return null;
 	    else 
 	    	return (
 		      	<tr>
-		      		<td>{this.props.book.isbn}</td>
-	          		<td>{this.props.book.title}</td>
-	          		<td>{this.props.book.author_name}</td>
-	          		<td>{this.props.book.isavailable}</td>
-	          		{this.props.book.isavailable === 'YES'?
-	          				<td>
-				          		<div>
-				          			<input type="text" onChange={this.updateInputValue} placeholder="Enter Card No..."/>
-				          			<input type="button" value="Check" onClick={this.handleClick}/>
-			                	</div>
-			               </td>
-			               
-	          					: 'NA'
-	          		}
-		      	</tr>
+		      		<td>{this.props.book.cardno}</td>
+	          		<td>{this.props.book.isbn}</td>
+	          		<td>{this.props.book.ssn}</td>
+	          		<td>{this.props.book.borrower_name}</td>
+	          		<td><input type="button" value="CheckIn" onClick={this.handleClick}/></td>
+	      		</tr>
     		);
   	}
 });
 
-var Popup = React.createClass({
-	  render() {
-	    return (
-	      <div className='popup'>
-	        <div className='popup_inner'>
-	          <h1>{this.props.text}</h1>
-	        <button onClick={this.props.closePopup}>close me</button>
-	        </div>
-	      </div>
-	    );
-	  }
-	});
-
-ReactDOM.render(<App/>, document.getElementById('search'));
+ReactDOM.render(<App/>, document.getElementById('checkin'));

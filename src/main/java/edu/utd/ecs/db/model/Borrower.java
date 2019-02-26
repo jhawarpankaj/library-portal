@@ -4,11 +4,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 @Entity
 public class Borrower {
 	@Id
@@ -17,4 +18,9 @@ public class Borrower {
 	private String bname;
 	private String address;
 	private String phone;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+	
+	public Borrower() {		
+	}
 }

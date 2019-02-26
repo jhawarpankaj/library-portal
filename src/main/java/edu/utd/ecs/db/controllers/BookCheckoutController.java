@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.utd.ecs.db.DAO.TotalLoansRepository;
-import edu.utd.ecs.db.DAO.ValidBorrowerRepository;
-import edu.utd.ecs.db.DTO.CheckoutDTO;
-import edu.utd.ecs.db.DTO.MaxIDLoanDTO;
+import edu.utd.ecs.db.DAO.BorrowerRepository;
+import edu.utd.ecs.db.DTO.StatusAndMessageDTO;
 import edu.utd.ecs.db.DTO.TotalLoansDTO;
 import edu.utd.ecs.db.DTO.ValidBorrowerDTO;
 import edu.utd.ecs.db.model.Book_Loans;
@@ -29,7 +28,7 @@ import edu.utd.ecs.db.service.Book_LoansService;
 public class BookCheckoutController {
 		
 	@Autowired
-	private ValidBorrowerRepository validBorrowerRepository;
+	private BorrowerRepository validBorrowerRepository;
 	
 	@Autowired
 	private TotalLoansRepository totalLoansRepository;	
@@ -39,26 +38,29 @@ public class BookCheckoutController {
 
 	@RequestMapping("/{values}")
 	@ResponseBody
-    public CheckoutDTO checkout(@PathVariable("values") String values) {
+    public StatusAndMessageDTO checkout(@PathVariable("values") String values) {
 		String cleanString = values.trim();
 		String cardId = cleanString.split(" ")[0];
 		String isbn = cleanString.split(" ")[1];
 		
 		ValidBorrowerDTO validBorrower = validBorrowerRepository.isValidBorrower(cardId);
 		if(validBorrower==null) {
-			return new CheckoutDTO(false, "Not a valid CardId.");
+			return new StatusAndMessageDTO(false, "Not a valid CardId.");
 		}
-		TotalLoansDTO totalLoans = totalLoansRepository.totalLoans(cardId);
+		TotalLoansDTO totalLoans = totalLoansRepository.totalLoansForCardID(cardId);
 		System.out.println(totalLoans.getTotalLoans());
 		if(totalLoans.getTotalLoans()>=3) {
-			return new CheckoutDTO(false, "User has already borrowed 3 books");
+			return new StatusAndMessageDTO(false, "User has already borrowed 3 books");
+		}
+		else if(totalLoansRepository.checkIfBookAlreadyCheckedOut(isbn) == 1) {
+			return new StatusAndMessageDTO(false, "This book has already been checked out. Please refresh!");
 		}
 		else {
 //			MaxIDLoanDTO maxIDFromBookLoans = totalLoansRepository.getMaxIDFromBookLoans();
 //			int maxLoanID = maxIDFromBookLoans.getMaxID();
 			
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Date currentDate = new Date();			
+			Date currentDate = new Date();
 			Calendar c = Calendar.getInstance();
 			c.setTime(currentDate);
 			c.add(Calendar.DATE, 14);
@@ -66,10 +68,10 @@ public class BookCheckoutController {
 			
 	//		int l = String.valueOf(maxLoanID).length();
 	
-			Book_Loans bookLoan = new Book_Loans(isbn, cardId, dateFormat.format(currentDate), dateFormat.format(currentDatePlusFourteen) , "");
+			Book_Loans bookLoan = new Book_Loans(isbn, cardId, dateFormat.format(currentDate), dateFormat.format(currentDatePlusFourteen), null);
 			int insert = book_LoansService.insert(bookLoan);
 			System.out.println("Inserted record with loanId:" + insert);
-			return new CheckoutDTO(true, "Book checked out successfully.");
+			return new StatusAndMessageDTO(true, "Book checked out successfully.");
 		}
     }
 }

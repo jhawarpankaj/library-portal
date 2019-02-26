@@ -5,8 +5,8 @@ var Home = React.createClass({
             <h1>Welcome to Library!</h1>
             <ul className="header">
               <li><a href="/search">Search</a></li>
-              <li><a href="/stuff">Stuff</a></li>
-              <li><a href="/contact">Contact</a></li>
+              <li><a href="/checkin">CheckIN</a></li>
+              <li><a href="/borrower">Create Borrower</a></li>
             </ul>
             <div className="content">
             </div>

@@ -1,7 +1,5 @@
 package edu.utd.ecs.db.model;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +21,10 @@ public class Book_Loans {
 	private String date_out;
 	private String due_date;
 	private String date_in;
+	
+	public Book_Loans() {
+		super();
+	}
 	
 	public Book_Loans(String isbn, String card_id, String date_out, String due_date, String date_in) {
 		this.isbn = isbn;

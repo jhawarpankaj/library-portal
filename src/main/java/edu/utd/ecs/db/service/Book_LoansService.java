@@ -19,5 +19,4 @@ public class Book_LoansService {
 		entityManager.persist(book_loans);
 		return book_loans.getLoan_id();
 	}
-
 }

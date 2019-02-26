@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.utd.ecs.db.DAO.SearchRepository;
-import edu.utd.ecs.db.DAO.SearchRepositoryDummy;
+import edu.utd.ecs.db.DAO.SearchRepository;
 import edu.utd.ecs.db.DTO.BookDTO;
 import edu.utd.ecs.db.DTO.SearchDTO;
 import edu.utd.ecs.db.model.Book;
@@ -27,7 +27,7 @@ import edu.utd.ecs.db.model.Book;
 public class SearchBooksController {
 	
 	@Autowired
-	private SearchRepositoryDummy searchRepository;
+	private SearchRepository searchRepository;
 
 	@RequestMapping("/search/{values}")
 	@ResponseBody
