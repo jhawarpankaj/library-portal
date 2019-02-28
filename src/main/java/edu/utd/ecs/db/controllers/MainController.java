@@ -30,4 +30,9 @@ public class MainController {
     public String borrower() {
         return "borrower";
     }
+	
+	@RequestMapping(value = "/fines", method = RequestMethod.GET)
+    public String fines() {
+        return "fines";
+    }
 }

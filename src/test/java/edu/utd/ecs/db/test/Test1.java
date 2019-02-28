@@ -1,5 +1,10 @@
 package edu.utd.ecs.db.test;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class Test1 {
 	public static void main(String[] args) {
 		String values = "Pankaj||1212112||sdsds||asdasda";
@@ -24,5 +29,14 @@ public class Test1 {
 		System.out.println(arrOfStr[0]);
 		for(String a:arrOfStr) 
 		System.out.println(a);
+		
+		
+		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+		Date currentDate = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(currentDate);
+		c.add(Calendar.DATE, 14);
+		Date currentDatePlusFourteen = c.getTime();
+		System.out.println("Date: " + dateFormat.format(currentDate));
 	}
 }

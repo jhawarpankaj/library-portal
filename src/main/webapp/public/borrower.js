@@ -2,6 +2,10 @@ var App = React.createClass({
 
   	verifyFormFieldsFromServer: function() {
 		var self = this;
+		if(this.state.inputvalueName == "" || this.state.inputvalueSSN == "" || this.state.inputvalueAddress == "" || this.state.inputvaluePhone == ""){
+			alert('Empty field are not allowed');
+			return;
+		}
 		const uri = "http://localhost:8080/api/borrower/create/" + this.state.inputvalueName + "||" + this.state.inputvalueSSN + "||" + this.state.inputvalueAddress + "||" + this.state.inputvaluePhone;
 		fetch(uri)
 		.then((resp) => resp.json())

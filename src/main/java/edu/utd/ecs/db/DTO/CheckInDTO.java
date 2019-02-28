@@ -12,5 +12,4 @@ public class CheckInDTO {
 	private String ssn;
 	private String borrower_name;
 	private String date_in;
-
 }
