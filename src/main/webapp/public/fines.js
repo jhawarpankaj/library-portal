@@ -7,6 +7,7 @@ var App = React.createClass({
 		.then((resp) => resp.json())
 		.then(function(data) {
 			alert(data['message']);
+			location.reload();
 		  });
 	},
 	
@@ -16,7 +17,6 @@ var App = React.createClass({
 		fetch(uri)
 		.then((resp) => resp.json())
 		.then(function(data) {
-			alert(data['message']);
 			self.setState({fines: data});
 		  });
 	},
@@ -46,8 +46,11 @@ var App = React.createClass({
 		else{
 		  return(
 				  <div>
-					  <button className="button is-info" onClick={this.handleChange.bind(this)}>Refresh Fines</button>
-					  <button className="button is-info" onClick={this.handleChange2.bind(this)}>Pay Fines</button>
+					  <div><a href='http://localhost:8080/'>Home</a></div><br/>
+					  <div>
+						  <button className="button is-info" onClick={this.handleChange.bind(this)}>Refresh Fines</button>
+						  <button className="button is-info" onClick={this.handleChange2.bind(this)}>Pay Fines</button>
+					  </div>
 				  </div>
 		  );
 	  }
@@ -58,6 +61,11 @@ var FinesTable = React.createClass({
 	render: function() {
 		var merged = [].concat.apply([], this.props.fines);
 	    var rows = [];
+	    if(merged.length == 0){
+	    	alert("No fines to pay!");
+	    	location.reload();
+	    	return;
+	    }
 	    merged.forEach(function(fine) {
 	      rows.push(
 	        <Fine fine={fine}/>) ;
@@ -99,6 +107,7 @@ var Fine = React.createClass({
 				console.log('data message:', data['message']);
 				console.log('type of data:', (typeof data));
 				alert(data['message']);
+				location.reload();
 			  });
 		    },
 

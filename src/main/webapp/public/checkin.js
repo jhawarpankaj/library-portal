@@ -6,9 +6,6 @@ var App = React.createClass({
 		fetch(uri)
 		.then((resp) => resp.json())
 		.then(function(data) {
-			console.log("Return of the api call.");
-			console.log('data:', data);
-			console.log('type of data:', (typeof data));
 		    self.setState({books: data});
 		  });
   },
@@ -31,6 +28,11 @@ var App = React.createClass({
 	},
 
 	render: function() {
+		const textStyle = {
+		  color: 'blue',
+			width: '500px',		 
+		    border: '1px solid #fffff',
+		};
 	  if (this.state.flag === true){
 		  return(
 				  <div><BooksTable books={this.state.books}/></div>
@@ -38,10 +40,13 @@ var App = React.createClass({
 	  }
 	  else{
 		  return(
-				 <div>	 
-		    		<input type="text" value={this.state.value} onChange={this.updateInputValue} placeholder="Enter something..."/>
-		            <button className="button is-info" onClick={this.handleChange.bind(this)}>Search</button>
-	             </div>
+				  <div>
+				  	<div><a href='http://localhost:8080/'>Home</a></div><br/>				 
+				  	<div>	 
+			    		<input type="text" style={textStyle} value={this.state.value} onChange={this.updateInputValue} placeholder="Enter card no or isbn..."/>
+			            <button className="button is-info" onClick={this.handleChange.bind(this)}>Search</button>
+		            </div>
+	            </div>
 		  );
 	  }
 }});
@@ -51,6 +56,12 @@ var BooksTable = React.createClass({
 	render: function() {
 		var merged = [].concat.apply([], this.props.books);
 	    var rows = [];
+	    console.log("Merged length: ", merged)
+	    if(merged.length == 0){
+	    	alert("Nothing to check in!");
+	    	location.reload();
+	    	return;
+	    }
 	    merged.forEach(function(book) {
 	      rows.push(
 	        <Book book={book}/>);
@@ -87,26 +98,6 @@ var Book = React.createClass({
 	    	};
 	  },
 	  
-	  togglePopup() {
-		    this.setState({
-		      showPopup: !this.state.showPopup
-		    });
-		  },
-
-	handleDelete() {
-	    var self = this;
-	    $.ajax({
-	        url: self.props.Book._links.self.href,
-	        type: 'DELETE',
-	        success: function(result) {
-	          self.setState({display: false});
-	        },
-	        error: function(xhr, ajaxOptions, thrownError) {
-	          toastr.error(xhr.responseJSON.message);
-	        }
-	    });
-	  },
-	  
 	  handleClick: function(e) {
 		  var self = this;
 		  var message = "";
@@ -114,13 +105,9 @@ var Book = React.createClass({
 			fetch(uri)
 			.then((resp) => resp.json())
 			.then(function(data) {
-				console.log("Return of the api call.");
-				console.log('data:', data);
-				console.log('data message:', data['message']);
-				console.log('type of data:', (typeof data));
-				message = data['message'];
 				alert(data['message']);
 				self.setState({status: data['status']});
+				location.reload();
 			  });
 			console.log(this.state.status);
 		    },

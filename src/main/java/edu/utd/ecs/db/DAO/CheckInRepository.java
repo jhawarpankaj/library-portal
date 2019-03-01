@@ -16,7 +16,7 @@ import edu.utd.ecs.db.model.Searchview;
 @Repository
 public interface CheckInRepository extends JpaRepository<Checkinview, String>{
 	
-	@Query("select new edu.utd.ecs.db.DTO.CheckInDTO(u.cardno, u.isbn, u.ssn, u.borrower_name, u.date_in) from Checkinview as u where LOWER(u.cardno) = :searchWord OR LOWER(u.isbn)= :searchWord OR LOWER(u.borrower_name) like LOWER(CONCAT('%', :searchWord, '%')) AND u.date_in is null")
+	@Query("select new edu.utd.ecs.db.DTO.CheckInDTO(u.cardno, u.isbn, u.ssn, u.borrower_name, u.date_in) from Checkinview as u where (LOWER(u.cardno) =:searchWord OR LOWER(u.isbn) =:searchWord OR LOWER(u.borrower_name) like LOWER(CONCAT('%', :searchWord, '%'))) AND u.date_in is null")
 	List<CheckInDTO> renderSearchResultsAsDTO(@Param("searchWord") String searchWord);
 	
 }
