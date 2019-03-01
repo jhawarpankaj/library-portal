@@ -42,10 +42,12 @@ Open the browser to access the UI. http://X.X.X.X/
 
 * [SpringBootAndReactJs](https://spring.io/guides/tutorials/react-and-spring-data-rest/) - The web framework used.
 * [Maven](https://maven.apache.org/) - Dependency Management.
+* [OS] - There is no specific platform requirement. Will work fine for Windows, Linux, MacOS.
+
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. First version is 0.0.1-SNAPSHOT.
+We use [SemVer](http://semver.org/) for versioning. First version is 0.0.1-SNAPSHOT. To make update or release new version change the versioning in the pom.xml.
 
 ## Authors
 
